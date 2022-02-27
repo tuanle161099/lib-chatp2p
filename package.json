@@ -1,0 +1,18 @@
+{
+  "name": "lib-chatp2p",
+  "version": "1.0.0",
+  "description": "decentralize chat app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "tuanle",
+  "license": "ISC",
+  "dependencies": {
+    "crypto-js": "^4.1.1",
+    "gun": "^0.2020.1235",
+    "tweetnacl": "^1.0.3",
+    "tweetnacl-util": "^0.15.1",
+    "typescript": "^4.5.5"
+  }
+}

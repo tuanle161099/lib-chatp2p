@@ -1,0 +1,30 @@
+{
+    "compilerOptions": {
+      "allowJs": true,
+      "target": "es2020",
+      "module": "commonjs",
+      "declaration": true,
+      "outDir": "./dist",
+      "strict": true,
+      "resolveJsonModule": true,
+      "noImplicitAny": false ,
+      "lib": [
+        "es2020",
+        "esnext"
+      ]
+    },
+    "include": [
+      "src"
+    ],
+    "exclude": [
+      "node_modules",
+      "test"
+    ],
+    "typedocOptions": {
+      "entryPoints": [
+        "./src/index.ts"
+      ],
+      "out": "docs"
+    }
+  }
+  
