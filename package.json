@@ -1,10 +1,18 @@
 {
   "name": "lib-chatp2p",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "description": "decentralize chat app",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "clean": "rm -rf ./dist",
+    "predeploy": "typedoc --excludePrivate --excludeProtected ./src/index.ts",
+    "deploy": "gh-pages -d docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tuanle161099/lib-chatp2p.git"
   },
   "author": "tuanle",
   "license": "ISC",

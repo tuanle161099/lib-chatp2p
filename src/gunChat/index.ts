@@ -8,13 +8,15 @@ import { decryptingMessage, encryptingMessage } from "./util";
 class GunChat {
   private _provider: any;
   private _keypair: BoxKeyPair;
-  constructor(keypair: BoxKeyPair) {
+  private _gunServer: string;
+  constructor(keypair: BoxKeyPair, gunServer: string) {
     this._provider = null;
     this._keypair = keypair;
+    this._gunServer = gunServer;
   }
 
   getProvider = async () => {
-    const db = Gun({ peers: ["https://gun-manhattan.herokuapp.com/gun"] });
+    const db = Gun({ peers: [this._gunServer] });
     this._provider = db;
     return this._provider;
   };
@@ -28,11 +30,18 @@ class GunChat {
 
   loadMessage = async (topic: string) => {
     const provider = await this.getProvider();
-    const messages = provider.get(topic);
-    const listMessage: any = [];
-    messages.map().once(async (data: [x: string]) => {
+    const messages = await provider.get(topic);
+    const listMessage: Record<string, any> = {};
+    await messages.map().once(async (data) => {
       const message = { data };
-      listMessage.push(message);
+
+      if (listMessage[data.owner]) {
+        const { chat } = listMessage[data.owner];
+        const newMess = [...chat];
+        newMess.push(data.chat);
+        listMessage[data.owner] = { ...listMessage[data.owner], chat: newMess };
+      }
+      listMessage[data.owner] = message;
     });
     return listMessage;
   };
@@ -58,10 +67,10 @@ class GunChat {
   loadDecryptMessages = async (topic: string, receiverPK: string) => {
     const sharedKey = await this.getShareKey(receiverPK);
     const provider = await this.getProvider();
-    const messages = provider.get(topic);
-    const listMessage: Message[] = [];
+    const messages = await provider.get(topic);
+    const listMessage: Record<string, Message> = {};
 
-    messages.map().once(async (data, id) => {
+    await messages.map().once(async (data, id) => {
       const text = decryptingMessage(data, sharedKey);
       if (!text) return;
       const createdAt = id;
@@ -70,7 +79,7 @@ class GunChat {
         createdAt,
         owner: data.owner,
       };
-      listMessage.push(message);
+      listMessage[createdAt] = message;
     });
 
     return listMessage;
